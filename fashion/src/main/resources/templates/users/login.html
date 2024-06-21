@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout-login">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/login/style.css}">
+    <title>Đăng nhập</title>
+</head>
+
+<body>
+
+<div layout:fragment="content" class="container" id="container">
+    <div class="form-container sign-up">
+        <form th:action="@{/register}" method="post" class="card-body">
+            <h1>Đăng ký</h1>
+            <div class="social-icons">
+                <a th:href="@{/oauth2/authorization/google}" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+            </div>
+            <span>hoặc đăng ký tài khoản mới</span>
+            <div th:if="${errors}" class="alert alert-danger justify-content-center" role="alert">
+                <ul>
+                    <li th:each="error : ${errors}" th:text="${error}" class="text-danger text-start"></li>
+                </ul>
+            </div>
+            <div class="form-group">
+            <input type="text" id="username" name="username" placeholder="Username">
+            </div>
+
+            <div class="form-group">
+            <input type="text" id="fullName" name="fullName" placeholder="Họ và tên">
+            </div>
+            <input type="date" id="dateOfBirth" name="dateOfBirth" placeholder="Ngày sinh">
+            <select id="gender" name="gender" class="form-control">
+                <option value="true">Nam</option>
+                <option value="false">Nữ</option>
+            </select>
+
+            <div class="form-group">
+            <input type="email" id="email" name="email" placeholder="Email">
+            </div>
+
+            <input type="text" id="phone" name="phone" placeholder="Số điện thoại">
+
+            <div class="form-group">
+            <input type="password" id="password" name="password" placeholder="Mật khẩu">
+            </div>
+
+            <input type="password" placeholder="Xác nhận mật khẩu">
+
+            <button type="submit">Đăng ký</button>
+        </form>
+    </div>
+    <div class="form-container sign-in">
+        <form th:action="@{/login}" method="post">
+            <legend>Please login</legend>
+            <div th:if="${param.error}" class="alert alert-danger">
+                Invalid username and password.
+            </div>
+            <div th:if="${param.logout}" class="alert alert-success">
+                You have been logged out.
+            </div>
+            <h1>Đăng nhập</h1>
+            <div class="social-icons">
+                <a th:href="@{/oauth2/authorization/google}" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+                <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+            </div>
+            <span>hoặc sử dụng tài khoản đã đăng ký</span>
+            <div th:if="${errors}" class="alert alert-danger justify-content-center" role="alert">
+                <ul>
+                    <li th:each="error : ${errors}" th:text="${error}" class="text-danger text-start"></li>
+                </ul>
+            </div>
+            <input type="text" name="username" placeholder="Username">
+            <input type="password" name="password" placeholder="Mật khẩu">
+            <a th:href="@{/forgot-password}">Quên mật khẩu?</a>
+            <button type="submit">Đăng nhập</button>
+        </form>
+    </div>
+    <div class="toggle-container">
+        <div class="toggle">
+            <div class="toggle-panel toggle-left">
+                <h1>Chào mừng quay trở lại!</h1>
+                <p>Nhập thông tin cá nhân của bạn để sử dụng tất cả các tính năng của trang web</p>
+                <button class="hidden" id="login">Đăng nhập</button>
+            </div>
+            <div class="toggle-panel toggle-right">
+                <h1>Xin chào bạn!</h1>
+                <p>Đăng ký với thông tin cá nhân của bạn để sử dụng tất cả các tính năng của trang web</p>
+                <button class="hidden" id="register">Đăng ký</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const container = document.getElementById('container');
+    const registerBtn = document.getElementById('register');
+    const loginBtn = document.getElementById('login');
+
+    registerBtn.addEventListener('click', () => {
+        container.classList.add("active");
+    });
+
+    loginBtn.addEventListener('click', () => {
+        container.classList.remove("active");
+    });
+</script>
+</body>
+
+</html>

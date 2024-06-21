@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout-admin">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách sản phẩm</title>
+</head>
+<body>
+<div class="container-fluid">
+    <section layout:fragment="content">
+        <div style="margin-left:10px; margin-bottom:5px">
+            <a th:href="@{/products/add}" class="btn btn-primary">Thêm sản phẩm</a>
+        </div>
+        <div style="margin-left:10px">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Ngày thêm</th>
+                    <th>Số lượng</th>
+                    <th>Giá</th>
+                    <th>Chức năng</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product : ${productList}">
+                    <td th:text="${product.id}"></td>
+                    <td th:text="${product.name}"></td>
+                    <td th:text="${product.createdDate}"></td>
+                    <td th:text="${product.quantity}"></td>
+                    <td th:text="${product.price}"></td>
+                    <td>
+                        <a th:href="@{/products/details/{id}(id=${product.id})}" class="btn btn-info btn-sm">Chi tiết</a>
+                        <a th:href="@{/products/update/{id}(id=${product.id})}" class="btn btn-success btn-sm">Cập nhật</a>
+                        <a th:href="@{/products/delete/{id}(id=${product.id})}" class="btn btn-danger btn-sm">Xóa</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+</body>
+</html>
