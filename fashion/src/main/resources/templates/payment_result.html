@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>MoMo Payment Result</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h2 class="mt-5">Payment Result</h2>
+    <div th:if="${message}" class="mt-3 alert alert-success">
+        <p th:text="${message}"></p>
+    </div>
+    <div th:if="${error}" class="mt-3 alert alert-danger">
+        <p th:text="${error}"></p>
+    </div>
+    <a th:href="@{/payment/initiate}" class="btn btn-primary mt-3">Initiate Another Payment</a>
+</div>
+</body>
+</html>
