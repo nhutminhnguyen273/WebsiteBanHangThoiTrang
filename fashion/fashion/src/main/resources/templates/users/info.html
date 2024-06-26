@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout-admin">
+<head>
+    <meta charset="UTF-8">
+    <title>Thông tin người dùng</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div layout:fragment="content" class="container mt-5">
+    <h1>Thông tin người dùng</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title" th:text="${user.username}">Tên đăng nhập</h5>
+            <p class="card-text" th:text="${user.email}">Email</p>
+            <p class="card-text" th:text="${user.fullName}">Họ và tên</p>
+            <p class="card-text" th:text="${user.dateOfBirth}">Ngày sinh</p>
+            <p class="card-text" th:text="${user.phone}">Số điện thoại</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

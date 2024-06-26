@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout-admin">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livestream</title>
+    <!-- Thêm các thẻ meta, link đến CSS, script cần thiết ở đây -->
+    <style>
+        #video-container {
+            width: 100%;
+            max-width: 800px;
+            margin: auto;
+        }
+        #local-video, #remote-video {
+            width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<h1>Thực hiện Livestream</h1>
+<section layout:fragment="content">
+    <div id="video-container">
+        <video id="local-video" autoplay muted></video> <!-- Video người livestream -->
+        <video id="remote-video" autoplay></video> <!-- Video người xem -->
+    </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.min.js"></script>
+<script>
+    const socket = io(); // Kết nối với server
+
+    socket.emit('join', { role: 'broadcaster' }); // Gửi thông tin role là broadcaster
+
+    const localVideo = document.getElementById('local-video');
+    const remoteVideo = document.getElementById('remote-video');
+
+    // Lắng nghe sự kiện từ server khi có người xem kết nối
+    socket.on('viewer-connected', () => {
+        startStreaming(); // Bắt đầu stream video
+    });
+
+    // Bắt đầu stream video
+    async function startStreaming() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            localVideo.srcObject = stream;
+
+            // Gửi stream đến server
+            const peerConnection = new RTCPeerConnection();
+            stream.getTracks().forEach(track => peerConnection.addTrack(track, stream));
+            peerConnection.addEventListener('icecandidate', event => {
+                if (event.candidate) {
+                    socket.emit('candidate', event.candidate); // Gửi candidate đến người xem
+                }
+            });
+            peerConnection.addEventListener('negotiationneeded', async () => {
+                const offer = await peerConnection.createOffer();
+                await peerConnection.setLocalDescription(offer);
+                socket.emit('offer', offer); // Gửi offer đến người xem
+            });
+
+            // Lắng nghe answer từ người xem
+            socket.on('answer', async (answer) => {
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+            });
+
+            // Lắng nghe candidate từ người xem
+            socket.on('candidate', async (candidate) => {
+                await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+            });
+
+            // Lắng nghe video stream từ người xem
+            peerConnection.addEventListener('track', event => {
+                if (event.track.kind === 'video') {
+                    remoteVideo.srcObject = new MediaStream([event.track]);
+                }
+            });
+        } catch (error) {
+            console.error('Error accessing media devices: ', error);
+        }
+    }
+</script>
+</body>
+</html>

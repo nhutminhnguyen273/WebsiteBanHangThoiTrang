@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout-admin">
+<head>
+    <meta charset="UTF-8">
+    <title>Voucher</title>
+    <link th:href="@{/admin/css/sb-admin-2.min.css}" rel="stylesheet">
+</head>
+<body>
+<div class="container-fluid">
+    <section layout:fragment="content">
+        <div style="margin-left:10px; margin-bottom:5px">
+            <a th:href="@{/vouchers/add}" class="btn btn-primary">Thêm voucher</a>
+        </div>
+        <div style="margin-left:10px">
+            <table class="table">
+                <thead class="table-dark">
+                <tr>
+                    <th>Mã voucher</th>
+                    <th>Tên voucher</th>
+                    <th>Ngày tạo</th>
+                    <th>Ngày áp dụng</th>
+                    <th>Ngày hết hạn</th>
+                    <th>Khuyến mãi</th>
+                    <th>Số lượng</th>
+                    <th>Chức năng</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="voucher : ${vouchers}">
+                    <td th:text="${voucher.id}"></td>
+                    <td th:text="${voucher.name}"></td>
+                    <td th:text="${voucher.createdDate}}"></td>
+                    <td th:text="${voucher.startDate}"></td>
+                    <td th:text="${voucher.endDate}"></td>
+                    <td th:text="${voucher.discount}"></td>
+                    <td th:text="${voucher.quantity}"></td>
+                    <td>
+                        <a th:href="@{/categories/update/{id}(id=${category.id})}" class="btn btn-success btn-sm">Cập nhật</a>
+                        <a th:href="@{/categories/delete/{id}(id=${category.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Xóa</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+</body>
+</html>

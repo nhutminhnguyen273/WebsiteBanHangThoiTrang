@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout-login">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng ký</title>
+    <link rel="stylesheet" th:href="@{/register/register.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<div layout:fragment="content" class="container">
+    <div class="title">Đăng ký</div>
+    <form th:action="@{/register}" th:object="${user}" method="post">
+        <div class="user-details">
+            <div class="input-box">
+                <span class="details">Họ và tên</span>
+                <input type="text" th:field="*{fullName}" placeholder="Nhập họ và tên của bạn" required>
+                <div class="error-message" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div>
+            </div>
+            <div class="input-box">
+                <span class="details">Username</span>
+                <input type="text" th:field="*{username}" placeholder="Nhập username của bạn" required>
+                <div class="error-message" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+            </div>
+            <div class="input-box">
+                <span class="details">Ngày sinh</span>
+                <input type="date" th:field="*{dateOfBirth}" placeholder="Nhập ngày sinh của bạn" required>
+                <div class="error-message" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></div>
+            </div>
+            <div class="input-box">
+                <span class="details">Email</span>
+                <input type="email" th:field="*{email}" placeholder="Nhập email của bạn" required>
+                <div class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+            </div>
+            <div class="input-box">
+                <span class="details">Số điện thoại</span>
+                <input type="tel" th:field="*{phone}" placeholder="Nhập số điện thoại của bạn" required>
+                <div class="error-message" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+            </div>
+            <div class="input-box">
+                <span class="details">Mật khẩu</span>
+                <input type="password" th:field="*{password}" placeholder="Nhập mật khẩu của bạn" required>
+                <div class="error-message" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+            </div>
+            <div class="input-box">
+                <span class="details">Xác nhận mật khẩu</span>
+                <input type="password" th:field="*{confirmPassword}" placeholder="Xác nhận mật khẩu của bạn" required>
+                <div class="error-message" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+            </div>
+        </div>
+        <div class="gender-details">
+            <input type="radio" th:field="*{gender}" value="Nữ" id="dot-1">
+            <input type="radio" th:field="*{gender}" value="Nam" id="dot-2">
+            <input type="radio" th:field="*{gender}" value="Khác" id="dot-3">
+            <span class="gender-title">Giới tính</span>
+            <div class="category">
+                <label for="dot-1">
+                    <span class="dot one"></span>
+                    <span class="gender">Nữ</span>
+                </label>
+                <label for="dot-2">
+                    <span class="dot two"></span>
+                    <span class="gender">Nam</span>
+                </label>
+                <label for="dot-3">
+                    <span class="dot three"></span>
+                    <span class="gender">Khác</span>
+                </label>
+            </div>
+        </div>
+        <div class="button-row">
+            <div class="button-group">
+                <input type="submit" value="Đăng ký">
+                <a th:href="@{/login}" role="button" class="icon">Đăng nhập</a>
+            </div>
+        </div>
+        <div class="button-row">
+            <div class="button-group">
+                <a th:href="@{/oauth2/authorization/google}" role="button" class="icon">Đăng nhập Google</a>
+                <a th:href="@{/oauth2/authorization/facebook}" role="button" class="icon">Đăng nhập Facebook</a>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>
