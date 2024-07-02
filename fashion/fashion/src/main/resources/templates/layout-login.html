@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng ký</title>
+    <link rel="stylesheet" th:href="@{/register/register.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+        body {
+            display: flex;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            background: linear-gradient(135deg, #71b7e6, #9b59b6);
+        }
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: #fff;
+            padding: 25px 30px;
+            border-radius: 5px;
+        }
+        .container .title {
+            font-size: 25px;
+            font-weight: 500;
+            position: relative;
+        }
+        .container .title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 3px;
+            width: 30px;
+            background: linear-gradient(135deg, #71b7e6, #9b59b6);
+        }
+        .container form .user-details {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin: 20px 0 12px 0;
+        }
+        form{
+            text-align: center;
+        }
+        form .user-details .input-box {
+            margin-bottom: 15px;
+            width: calc(100% / 2 - 20px);
+        }
+        .user-details .input-box .details {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        form .user-details .input-forgot-password {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+        .user-details .input-forgot-password .details {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        form .user-details .input-forgot-password input {
+            height: 45px;
+            width: 100%;
+            outline: none;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            padding-left: 15px;
+            font-size: 16px;
+            border-bottom-width: 2px;
+            transition: all 0.3s ease;
+        }
+        form .user-details .input-box input {
+            height: 45px;
+            width: 100%;
+            outline: none;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            padding-left: 15px;
+            font-size: 16px;
+            border-bottom-width: 2px;
+            transition: all 0.3s ease;
+        }
+        .user-details .input-box input:focus,
+        .user-details .input-box input:valid {
+            border-color: #9b59b6;
+        }
+        form .gender-details .gender-title {
+            font-size: 20px;
+            font-weight: 500;
+        }
+        form .gender-details .category {
+            display: flex;
+            width: 80%;
+            margin: 14px 0;
+            justify-content: space-between;
+        }
+        .gender-details .category label {
+            display: flex;
+            align-items: center;
+        }
+        .gender-details .category .dot {
+            height: 18px;
+            width: 18px;
+            background: #d9d9d9;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 5px solid transparent;
+            transition: background 0.3s ease;
+        }
+        #dot-1:checked ~ .category label .one,
+        #dot-2:checked ~ .category label .two,
+        #dot-3:checked ~ .category label .three {
+            border-color: #d9d9d9;
+            background: #9b59b6;
+        }
+        form input[type="radio"] {
+            display: none;
+        }
+        .button-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .button-group {
+            display: flex;
+        }
+
+        .button-group input,
+        .button-group a {
+            flex: 1;
+            height: 45px;
+            outline: none;
+            color: #fff;
+            border: none;
+            font-size: 18px;
+            font-weight: 500;
+            border-radius: 5px;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #71b7e6, #9b59b6);
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.3s ease;
+            text-decoration: none;
+            margin-right: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+            min-width: 120px;
+            white-space: nowrap;
+        }
+
+        .button-group input:hover,
+        .button-group a:hover {
+            background: linear-gradient(-135deg, #71b7e6, #9b59b6);
+        }
+        .forgot-password a{
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+        .error-message {
+            color: red;
+            font-size: 12px;
+        }
+        @media(max-width: 584px) {
+            .container {
+                max-width: 100%;
+            }
+            form .user-details .input-box {
+                margin-bottom: 15px;
+                width: 100%;
+            }
+            form .gender-details .category {
+                width: 100%;
+            }
+            .container form .user-details {
+                max-height: 300px;
+                overflow-y: scroll;
+            }
+            .user-details::-webkit-scrollbar {
+                width: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content" class="container">
+</div>
+</body>
+</html>

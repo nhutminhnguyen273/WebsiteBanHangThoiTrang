@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout-admin">
+<head>
+    <meta charset="UTF-8">
+    <title>Cập nhật voucher</title>
+</head>
+<body>
+<div class="container-fluid" style="margin-left:10px">
+    <h1>Cập nhật sản phẩm</h1>
+    <section layout:fragment="content" class="container mb-5">
+        <form th:action="@{/vouchers/update/{id}(id=${voucher.id})}" method="post" th:object="${voucher}" enctype="multipart/form-data"  class="needs-validation" novalidate>
+            <div class="mb-3">
+                <label for="name">Tên sản phẩm</label>
+                <input type="text" id="name" name="name" class="form-control" th:field="*{name}" placeholder="Tên sản phẩm">
+                <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            </div>
+            <button type="submit" class="btn btn-primary">Cập nhật</button>
+            <a type="button" th:href="@{/products}" class="btn btn-info">Quay về</a>
+        </form>
+    </section>
+</div>
+</body>
+</html>

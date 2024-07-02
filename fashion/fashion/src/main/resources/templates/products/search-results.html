@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Tìm kiếm</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container mt-4">
+        <div class="row">
+            <div th:each="product : ${products}" class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img th:src="@{/image/{avatar}(avatar=${product.avatar})}" class="card-img-top" alt="Product Image">
+                    <div class="card-body d-flex flex-column">
+                        <div class="text-center mb-2">
+                            <h5 class="card-title" th:text="${product.name}">Product Name</h5>
+                        </div>
+                        <p class="card-text flex-grow-1" th:text="${product.description}">Product Description</p>
+                        <div class="text-center">
+                            <a th:href="@{/product/details/{id}(id=${product.id})}" class="primary-btn" style="width: 150px;">Chi tiết</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center mt-4">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/product/{name}(name=${name}, page=${currentPage - 1}, size=${size})}"><</a>
+                </li>
+                <li class="page-item" th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${pageNumber == currentPage} ? 'active'">
+                    <a class="page-link" th:href="@{/product/{name}(name=${name}, page=${pageNumber}, size=${size})}" th:text="${pageNumber + 1}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/product/{name}(name=${name}, page=${currentPage + 1}, size=${size})}">></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

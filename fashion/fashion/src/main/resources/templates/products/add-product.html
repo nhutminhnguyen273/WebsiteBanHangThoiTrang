@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout-admin">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm sản phẩm</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link th:href="@{/admin/css/sb-admin-2.min.css}" rel="stylesheet">
+</head>
+<body>
+<div class="container-fluid" style="margin-left:10px">
+    <h1>Thêm sản phẩm</h1>
+    <section layout:fragment="content" class="container mb-5">
+        <form th:action="@{/products/add}" method="post" th:object="${product}" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="name">Tên sản phẩm</label>
+                <input type="text" id="name" name="name" class="form-control" th:field="*{name}" placeholder="Tên sản phẩm">
+                <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{errors}"></div>
+            </div>
+            <div class="mb-3">
+                <label for="description">Mô tả</label>
+                <input type="text" id="description" name="description" class="form-control" th:field="*{description}">
+            </div>
+            <div class="mb-3">
+                <label for="quantity">Số lượng</label>
+                <input type="text" id="quantity" name="quantity" class="form-control" th:field="*{quantity}" placeholder="Số lượng">
+                <div class="text-danger" th:if="${#fields.hasErrors('quantity')}" th:errors="*{errors}"></div>
+            </div>
+            <div class="mb-3">
+                <label for="price">Giá</label>
+                <input type="text" id="price" name="price" class="form-control" th:field="*{price}" placeholder="Giá sản phẩm">
+                <div class="text-danger" th:if="${#fields.hasErrors('price')}" th:errors="*{errors}"></div>
+            </div>
+            <div class="mb-3">
+                <label for="avatar">Ảnh sản phẩm</label>
+                <input type="file" id="avatar" name="imageFile" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="detailsImages">Ảnh chi tiết sản phẩm</label>
+                <input type="file" id="detailsImages" name="detailsImages" class="form-control" multiple>
+            </div>
+            <div class="mb-3">
+                <label for="category">Loại sản phẩm</label>
+                <select th:field="*{category}" class="form-control" id="category">
+                    <option th:each="category : ${categories}"
+                            th:value="${category.id}" th:text="${category.name}"></option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Lưu</button>
+            <a type="button" th:href="@{/products}" class="btn btn-info">Quay về</a>
+        </form>
+    </section>
+</div>
+</body>
+</html>

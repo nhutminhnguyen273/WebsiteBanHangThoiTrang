@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout-admin">
+<head>
+    <meta charset="UTF-8">
+    <title>Thống kê</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:src="@{admin/js/demo/chart-bar-demo.js}"></script>
+</head>
+<body>
+<div layout:fragment="content" class="container">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Thống kê doanh thu</h6>
+        </div>
+        <div class="card-body">
+            <div class="chart-bar">
+                <canvas id="myBarChart"></canvas>
+                <div id="revenueStatistics" th:text="${revenueStatistics}" style="display:none;"></div> <!-- Hidden div to pass data -->
+            </div>
+            <hr>
+        </div>
+    </div>
+</div>
+</body>
+</html>
