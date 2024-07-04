@@ -11,29 +11,31 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
           rel="stylesheet">
     <script>
-        document.querySelectorAll('input[name="quantity"]').forEach(input => {
-            input.addEventListener('change', function () {
-                const productId = this.dataset.productId;
-                const quantity = this.value;
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('input[name="quantity"]').forEach(input => {
+                input.addEventListener('change', function () {
+                    const productId = this.dataset.productId;
+                    const quantity = this.value;
 
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '/cart/update';
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '/cart/update';
 
-                const productIdInput = document.createElement('input');
-                productIdInput.type = 'hidden';
-                productIdInput.name = 'productId';
-                productIdInput.value = productId;
-                form.appendChild(productIdInput);
+                    const productIdInput = document.createElement('input');
+                    productIdInput.type = 'hidden';
+                    productIdInput.name = 'productIds';
+                    productIdInput.value = productId;
+                    form.appendChild(productIdInput);
 
-                const quantityInput = document.createElement('input');
-                quantityInput.type = 'hidden';
-                quantityInput.name = 'quantity';
-                quantityInput.value = quantity;
-                form.appendChild(quantityInput);
+                    const quantityInput = document.createElement('input');
+                    quantityInput.type = 'hidden';
+                    quantityInput.name = 'quantities';
+                    quantityInput.value = quantity;
+                    form.appendChild(quantityInput);
 
-                document.body.appendChild(form);
-                form.submit();
+                    document.body.appendChild(form);
+                    form.submit();
+                });
             });
         });
     </script>
@@ -93,19 +95,10 @@
                     </div>
                 </div>
                 <div class="col-lg-4">
-                    <div class="cart__discount">
-                        <h6>Mã khuyến mãi</h6>
-                        <form th:action="@{/vouchers//apply-discount}" method="post">
-                            <input type="text" id="voucherCode" name="voucherCode" th:value="${voucherCode}" placeholder="Khuyến mãi">
-                            <button type="submit">Áp dụng</button>
-                        </form>
-                        <p th:if="${successMessage}" th:text="${successMessage}"></p>
-                        <p th:if="${errorMessage}" th:text="${errorMessage}"></p>
-                    </div>
                     <div class="cart__total">
                         <h6>Tổng giỏ hàng</h6>
                         <ul>
-                            <li>Tổng <span th:text="${discountedAmount != null ? discountedAmount : totalCost}"></span></li>
+                            <li>Tổng <span th:text="${totalCost}"></span></li>
                         </ul>
                         <div>
                             <a th:href="@{/cart/clear}" class="primary-btn" style="margin-bottom:5px">Xóa giỏ hàng</a>
@@ -117,6 +110,13 @@
                 </div>
             </div>
         </form>
+        <div class="cart__discount">
+            <h6>Mã khuyến mãi</h6>
+            <form th:action="@{/cart/apply-voucher}" method="post">
+                <input type="text" id="voucherCode" name="voucherCode" placeholder="Khuyến mãi">
+                <button type="submit">Áp dụng</button>
+            </form>
+        </div>
     </div>
 </section>
 </body>

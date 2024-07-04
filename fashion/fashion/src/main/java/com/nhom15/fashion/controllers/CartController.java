@@ -50,11 +50,11 @@ public class CartController {
         DecimalFormat decimalFormat = new DecimalFormat("#,### VND");
 
         cartItems.forEach(item -> {
-            item.setFormattedPrice(decimalFormat.format(item.getProduct().getPrice() * item.getQuantity()));
+            item.setFormattedPrice(decimalFormat.format(item.getTotalPrice()));
         });
 
         long totalCost = cartItems.stream()
-                .mapToLong(item -> item.getProduct().getPrice() * item.getQuantity())
+                .mapToLong(CartItem::getTotalPrice)
                 .sum();
 
         String formattedTotalCost = decimalFormat.format(totalCost);
@@ -129,7 +129,43 @@ public class CartController {
 
         cartService.updateCart(userId, productQuantities);
 
-        redirectAttributes.addFlashAttribute("message", "Giỏ hàng đã được cập nhật thành công");
+        return "redirect:/cart";
+    }
+
+    @PostMapping("/apply-voucher")
+    public String applyVoucher(@RequestParam("voucherCode") String voucherCode, RedirectAttributes redirectAttributes, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/login";
+        }
+
+        if (!(authentication.getPrincipal() instanceof User)) {
+            return "redirect:/error";
+        }
+
+        User user = (User) authentication.getPrincipal();
+        Long userId = user.getId();
+
+        List<CartItem> cartItems = cartService.getCartItems(userId);
+
+        try {
+            voucherService.applyVoucher(voucherCode, cartItems);
+            redirectAttributes.addFlashAttribute("successMessage", "Mã khuyến mãi đã được áp dụng thành công.");
+        } catch (IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        DecimalFormat decimalFormat = new DecimalFormat("#,### VND");
+
+        cartItems.forEach(item -> {
+            item.setFormattedPrice(decimalFormat.format(item.getTotalPrice()));
+        });
+
+        long totalCost = cartItems.stream()
+                .mapToLong(CartItem::getTotalPrice)
+                .sum();
+
+        String formattedTotalCost = decimalFormat.format(totalCost);
+        model.addAttribute("totalCost", formattedTotalCost);
         return "redirect:/cart";
     }
 }

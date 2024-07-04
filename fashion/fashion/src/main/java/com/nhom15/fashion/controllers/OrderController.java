@@ -59,7 +59,7 @@ public class OrderController {
         return "/cart/checkout";
     }
     @PostMapping("/pay")
-    public String submitOrder(String customerName, String address, String email, String phone, String note, String paymentMethod, String voucherCode, RedirectAttributes redirectAttributes) {
+    public String submitOrder(String customerName, String address, String email, String phone, String note, String paymentMethod, RedirectAttributes redirectAttributes) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated()) {
             return "redirect:/login";
@@ -71,21 +71,20 @@ public class OrderController {
             return "redirect:/cart";
         }
 
-        String orderId = orderService.createdOrder(customerName, address, email, phone, note, cartItems, userId, voucherCode);
+        long totalPrice = cartItems.stream().mapToLong(item -> item.getTotalPrice()).sum();
+
+        String orderId = orderService.createdOrder(customerName, address, email, phone, note, cartItems, userId);
         redirectAttributes.addAttribute("orderId", orderId);
 
         switch (paymentMethod) {
             case "vnp":
                 return "redirect:/payment/create_payment";
             case "paypal":
-                // Calculate total price in USD for PayPal payment
-                long totalPrice = cartItems.stream().mapToLong(item -> item.getProduct().getPrice() * item.getQuantity()).sum();
                 double totalPriceInUSD = (double) totalPrice / 25451;
                 redirectAttributes.addAttribute("totalPrice", totalPriceInUSD);
                 return "redirect:/showPaymentPage"; // Redirect to show PayPal payment page
             case "momo":
-                // Calculate total price for MoMo payment
-                totalPrice = cartItems.stream().mapToLong(item -> item.getProduct().getPrice() * item.getQuantity()).sum();
+                // Redirect to MoMo payment initiation with total price
                 redirectAttributes.addAttribute("totalPrice", totalPrice);
                 return "redirect:/payment/initiate";
             default:

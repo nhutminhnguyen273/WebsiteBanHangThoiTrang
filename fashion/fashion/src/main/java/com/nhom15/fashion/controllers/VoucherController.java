@@ -79,38 +79,4 @@ public class VoucherController {
         voucherService.deleteById(id);
         return "redirect:/vouchers";
     }
-    @PostMapping("/apply-discount")
-    public String applyDiscount(@RequestParam("voucherCode") String voucherCode, Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login";
-        }
-
-        Long userId = null;
-        if (authentication.getPrincipal() instanceof User) {
-            User user = (User) authentication.getPrincipal();
-            userId = user.getId();
-        } else if (authentication.getPrincipal() instanceof OAuth2User) {
-        }
-
-        if (userId == null) {
-            return "redirect:/login";
-        }
-        Optional<Voucher> voucherOptional = voucherService.getVoucherByCode(voucherCode);
-
-        if (voucherOptional.isPresent()) {
-            Voucher voucher = voucherOptional.get();
-            double discountPercentage = voucher.getDiscount();
-            cartService.applyDiscountToCartItems(userId, discountPercentage);
-            model.addAttribute("discountedAmount", true);
-            model.addAttribute("discountPercentage", discountPercentage);
-        } else {
-            model.addAttribute("discountError", "Mã giảm giá không hợp lệ hoặc đã hết hạn.");
-        }
-
-        model.addAttribute("cartItems", cartService.getCartItems(userId));
-        model.addAttribute("totalAmount", cartService.getTotalAmount(userId));
-        return "redirect:/cart";
-    }
 }

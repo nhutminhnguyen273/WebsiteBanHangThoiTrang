@@ -17,7 +17,6 @@
             <table class="table">
                 <thead class="table-dark">
                 <tr>
-                    <th>Mã voucher</th>
                     <th>Tên voucher</th>
                     <th>Mã code</th>
                     <th>Ngày tạo</th>
@@ -30,7 +29,6 @@
                 </thead>
                 <tbody>
                 <tr th:each="voucher : ${vouchers}">
-                    <td th:text="${voucher.id}"></td>
                     <td th:text="${voucher.name}"></td>
                     <td th:text="${voucher.code}"></td>
                     <td th:text="${voucher.createdDate}"></td>

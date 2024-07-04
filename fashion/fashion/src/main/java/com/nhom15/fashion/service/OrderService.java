@@ -38,7 +38,7 @@ public class OrderService {
     private VoucherRepository voucherRepository;
 
     @Transactional
-    public String createdOrder(String customerName, String address, String email, String phone, String note, List<CartItem> cartItems, Long userId, String voucherCode) {
+    public String createdOrder(String customerName, String address, String email, String phone, String note, List<CartItem> cartItems, Long userId) {
         Order order = new Order();
         order.setCustomerName(customerName);
         order.setAddress(address);
@@ -56,20 +56,8 @@ public class OrderService {
             details.setProduct(item.getProduct());
             details.setQuantity(item.getQuantity());
             details.setSize(item.getSize());
-            if (voucherCode != null && !voucherCode.isEmpty()) {
-                Optional<Voucher> voucherOpt = voucherRepository.findByCode(voucherCode);
-                Voucher voucher = voucherOpt.orElseThrow(() -> new RuntimeException("Mã giảm giá không hợp lệ hoặc đã hết hạn"));
-                if (voucher.getEndDate().isAfter(LocalDate.now())) {
-                    order.setVoucher(voucher);
-                    double discountAmount = calculateDiscount(cartItems, voucher.getDiscount());
-                    double totalCost = calculateTotalPrice(cartItems) - discountAmount;
-                    order.setTotalPrice(totalCost);
-                } else {
-                    throw new RuntimeException("Mã giảm giá không hợp lệ hoặc đã hết hạn");
-                }
-            } else {
-                order.setTotalPrice(calculateTotalPrice(cartItems));
-            }
+            double totalCost = calculateTotalPrice(cartItems);
+            order.setTotalPrice(totalCost);
             orderDetailRepository.save(details);
         }
 
@@ -85,10 +73,6 @@ public class OrderService {
             totalCost += item.getProduct().getPrice() * item.getQuantity();
         }
         return totalCost;
-    }
-    private double calculateDiscount(List<CartItem> cartItems, int discountPercentage) {
-        double totalCost = calculateTotalPrice(cartItems);
-        return ((discountPercentage / 100.0) * totalCost);
     }
     @Transactional
     public BigDecimal calculateTotalPrice(String orderId) {

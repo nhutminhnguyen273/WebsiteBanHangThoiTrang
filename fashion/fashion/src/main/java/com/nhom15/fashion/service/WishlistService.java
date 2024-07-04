@@ -7,6 +7,10 @@ import com.nhom15.fashion.repositories.IUserRepository;
 import com.nhom15.fashion.repositories.ProductRepository;
 import com.nhom15.fashion.repositories.WishlistItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,45 +22,43 @@ public class WishlistService {
     @Autowired
     private WishlistItemRepository wishlistItemRepository;
     @Autowired
-    private ProductService productService;
-    @Autowired
-    private UserService userService;
-    @Autowired
     private IUserRepository userRepository;
     @Autowired
     private ProductRepository productRepository;
 
     @Transactional
-    public List<WishlistItem> getWishlistItems(Long userId) {
-        return wishlistItemRepository.findByUserId(userId);
-    }
-
-    @Transactional
     public void addToWishlist(Long userId, Long productId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalStateException("Không tìm thấy người dùng này"));
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalStateException("Không tìm thấy sản phẩm này"));
+                .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + productId));
 
-        Optional<WishlistItem> existingWishlistItem = wishlistItemRepository.findByUserAndProduct(user, product);
+        Optional<WishlistItem> existingItem = wishlistItemRepository.findByProduct_IdAndUser_Id(userId, productId);
 
-        if (existingWishlistItem.isPresent()) {
-            throw new IllegalStateException("Sản phẩm đã có trong danh sách yêu thích của bạn");
-        } else {
-            WishlistItem wishlistItem = new WishlistItem(user, product);
-            wishlistItemRepository.save(wishlistItem);
+        if (existingItem.isPresent()) {
+            return; // Sản phẩm đã tồn tại trong danh sách yêu thích
         }
+
+        WishlistItem wishlistItem = new WishlistItem();
+        wishlistItem.setUser(user);
+        wishlistItem.setProduct(product);
+
+        wishlistItemRepository.save(wishlistItem);
     }
 
     @Transactional
-    public void removeFromWishlist(Long userId, Long wishlistItemId) {
+    public void removeFromWishlist(Long wishlistItemId) {
         WishlistItem wishlistItem = wishlistItemRepository.findById(wishlistItemId)
-                .orElseThrow(() -> new IllegalStateException("Không tìm thấy sản phẩm này trong danh sách yêu thích"));
+                .orElseThrow(() -> new IllegalArgumentException("Wishlist item not found with id: " + wishlistItemId));
 
-        if (!wishlistItem.getUser().getId().equals(userId)) {
-            throw new IllegalStateException("Bạn không có quyền thực hiện thao tác này");
-        }
         wishlistItemRepository.delete(wishlistItem);
+    }
+
+    @Transactional(readOnly = true)
+    public List<WishlistItem> getWishlistByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
+        return wishlistItemRepository.findByUserId(userId);
     }
 }

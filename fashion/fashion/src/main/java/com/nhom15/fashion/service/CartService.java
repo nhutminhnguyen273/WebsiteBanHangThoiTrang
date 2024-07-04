@@ -34,9 +34,6 @@ public class CartService {
     @Autowired
     private VoucherRepository voucherRepository;
 
-    @Autowired
-    private VoucherService voucherService;
-
     public List<CartItem> getCartItems(Long userId) {
         return cartRepository.findByUser_Id(userId);
     }
@@ -111,15 +108,5 @@ public class CartService {
     public double getTotalAmount(Long userId) {
         List<CartItem> cartItems = cartRepository.findByUser_Id(userId);
         return calculateTotalCost(cartItems);
-    }
-    @Transactional
-    public void applyDiscountToCartItems(Long userId, double discountPercentage) {
-        List<CartItem> cartItems = cartRepository.findByUser_Id(userId);
-        for (CartItem cartItem : cartItems) {
-            long totalPrice = cartItem.getProduct().getPrice() * cartItem.getQuantity();
-            long discountedAmount = (long) (totalPrice - (totalPrice * discountPercentage / 100));
-            cartItem.setTotalPrice(discountedAmount);
-            cartRepository.save(cartItem);
-        }
     }
 }

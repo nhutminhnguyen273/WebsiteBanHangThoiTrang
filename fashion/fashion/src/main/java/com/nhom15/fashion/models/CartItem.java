@@ -50,10 +50,6 @@ public class CartItem {
         updateTotalPrice();
     }
 
-    public void applyDiscount(float discount) {
-        this.totalPrice = (long) (product.getPrice() * quantity * (1 - discount / 100));
-    }
-
     private void updateTotalPrice() {
         this.totalPrice = product.getPrice() * quantity;
     }

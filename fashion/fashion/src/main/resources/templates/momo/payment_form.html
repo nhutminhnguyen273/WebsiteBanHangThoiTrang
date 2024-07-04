@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout">
 <head>
     <meta charset="UTF-8">
     <title>MoMo Payment Form</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
-<div class="container">
-    <h2 class="mt-5">MoMo Payment Form</h2>
+<div layout:fragment="content" class="container">
+    <h2 class="mt-5">Thanh toán MoMo</h2>
     <form th:action="@{/payment/momo}" method="post">
         <input type="hidden" name="orderId" id="orderId" th:value="${orderId}">
         <div class="form-group">
-            <label for="amount">Amount:</label>
+            <label for="amount">Tổng tiền:</label>
             <input type="text" class="form-control" id="amount" name="amount" th:value="${amount}" readonly>
         </div>
-        <button type="submit" class="btn btn-primary">Pay with MoMo</button>
+        <button type="submit" class="primary-btn">Thanh toán MoMo</button>
     </form>
     <div th:if="${error}" class="mt-3 alert alert-danger">
         <p th:text="${error}"></p>

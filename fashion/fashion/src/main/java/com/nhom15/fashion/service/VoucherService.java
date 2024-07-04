@@ -1,9 +1,12 @@
 package com.nhom15.fashion.service;
 
+import com.nhom15.fashion.models.CartItem;
 import com.nhom15.fashion.models.Voucher;
+import com.nhom15.fashion.repositories.CartRepository;
 import com.nhom15.fashion.repositories.VoucherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,6 +16,8 @@ import java.util.Optional;
 public class VoucherService {
     @Autowired
     private VoucherRepository voucherRepository;
+    @Autowired
+    private CartRepository cartRepository;
 
     public List<Voucher> getAll(){
         return voucherRepository.findAll();
@@ -44,14 +49,27 @@ public class VoucherService {
     public Optional<Voucher> getVoucherByCode(String code) {
         return voucherRepository.findByCode(code);
     }
+    @Transactional
+    public void applyVoucher(String code, List<CartItem> cartItems) {
+        Voucher voucher = voucherRepository.findByCode(code)
+                .orElseThrow(() -> new IllegalStateException("Không tìm thấy mã voucher này."));
 
-    public void updateQuantity(Voucher voucher, int quantity) {
-        voucher.setQuantity(quantity);
+        if (voucher.getQuantity() <= 0) {
+            throw new IllegalStateException("Mã khuyến mãi đã hết lượt sử dụng.");
+        }
+
+        for (CartItem cartItem : cartItems) {
+            cartItem.setVoucher(voucher);
+            long discountAmount = (cartItem.getProduct().getPrice() * voucher.getDiscount()) / 100;
+            long discountedPrice = cartItem.getProduct().getPrice() - discountAmount;
+            long newTotalPrice = discountedPrice * cartItem.getQuantity();
+            cartItem.setTotalPrice(newTotalPrice);
+            cartItem.setFormattedPrice(String.format("%,d VND", newTotalPrice));
+            cartRepository.save(cartItem);
+        }
+
+        voucher.setQuantity(voucher.getQuantity() - 1);
         voucherRepository.save(voucher);
     }
 
-    public boolean isValid(Voucher voucher) {
-        LocalDate now = LocalDate.now();
-        return voucher.getStartDate().isBefore(now) && voucher.getEndDate().isAfter(now);
-    }
 }

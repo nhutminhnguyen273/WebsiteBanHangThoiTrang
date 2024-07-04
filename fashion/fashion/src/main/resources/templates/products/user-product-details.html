@@ -115,7 +115,10 @@
                                 </form>
                             </div>
                             <div class="product__details__btns__option">
-                                <a href="#"><i class="fa fa-heart"></i> add to wishlist</a>
+                                <form th:action="@{/wishlist/add}" method="post">
+                                    <input type="hidden" name="productId" th:value="${product.id}" />
+                                    <button type="submit"><i class="fa fa-heart"></i>Yêu thích</button>
+                                </form>
                                 <a href="#"><i class="fa fa-exchange"></i> Add To Compare</a>
                             </div>
                             <div class="product__details__last__option">

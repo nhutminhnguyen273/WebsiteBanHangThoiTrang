@@ -41,13 +41,6 @@
                 <input type="number" id="quantity" name="quantity" class="form-control" th:field="*{quantity}">
                 <div class="text-danger" th:if="${#fields.hasErrors('quantity')}" th:errors="*{errors}"></div>
             </div>
-            <div class="mb-3">
-                <label for="category">Loại sản phẩm</label>
-                <select th:field="*{category}" class="form-control" id="category">
-                    <option th:each="category : ${categories}"
-                            th:value="${category.id}" th:text="${category.name}"></option>
-                </select>
-            </div>
             <button type="submit" class="btn btn-primary">Lưu</button>
             <a type="button" th:href="@{/vouchers}" class="btn btn-info">Quay về</a>
         </form>

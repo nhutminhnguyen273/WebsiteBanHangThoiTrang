@@ -1,6 +1,8 @@
 package com.nhom15.fashion.controllers;
 
+import com.nhom15.fashion.models.Category;
 import com.nhom15.fashion.models.Feedback;
+import com.nhom15.fashion.service.CategoryService;
 import com.nhom15.fashion.service.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,9 +17,13 @@ import java.util.List;
 public class FeedbackController {
     @Autowired
     private FeedbackService feedbackService;
+    @Autowired
+    private CategoryService categoryService;
 
     @GetMapping("/feedback")
     public String showFeedbackForm(Model model) {
+        List<Category> categoriesList = categoryService.getAll();
+        model.addAttribute("categories", categoriesList);
         model.addAttribute("feedback", new Feedback());
         return "feedback/feedback-form";
     }
