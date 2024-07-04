@@ -20,8 +20,22 @@
             </div>
             <div class="mb-3">
                 <label for="description">Mô tả</label>
-                <input type="text" id="description" name="description" class="form-control" th:field="*{description}">
+                <textarea id="description" name="description" class="form-control"></textarea>
             </div>
+            <!-- Script để khởi tạo CKEditor -->
+            <script>
+                // Khởi tạo CKEditor với ngôn ngữ tiếng Việt và cấu hình
+                CKEDITOR.replace('description', {
+                    language: 'vi',
+                    // Vô hiệu hóa việc tự động thêm thẻ <p> và </p>
+                    enterMode: CKEDITOR.ENTER_BR,
+                    shiftEnterMode: CKEDITOR.ENTER_BR,
+                    // Không lọc, hiển thị hoặc mã hóa nội dung
+                    allowedContent: true,
+                    basicEntities: false,
+                    entities: false
+                });
+            </script>
             <div class="mb-3">
                 <label for="quantity">Số lượng</label>
                 <input type="text" id="quantity" name="quantity" class="form-control" th:field="*{quantity}" placeholder="Số lượng">
