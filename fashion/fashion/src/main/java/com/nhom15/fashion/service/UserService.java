@@ -37,13 +37,11 @@ public class UserService implements UserDetailsService {
     @Autowired
     private InvoiceRepository invoiceRepository;
 
-    // Lưu người dùng mới vào database sau khi mã hóa password
     public void save(@NotNull User user){
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         userRepository.save(user);
     }
 
-    // Gán vai trò mặc định cho người dùng dựa trên người dùng
     public void setDefaultRole(String username){
         userRepository.findByUsername(username).ifPresentOrElse(
                 user -> {
@@ -70,7 +68,6 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy người dùng"));
     }
 
-    // Tìm kiếm người dùng dựa trên tên đăng nhập
     public Optional<User> findByUsername(String username) throws UsernameNotFoundException{
         return userRepository.findByUsername(username);
     }
@@ -158,6 +155,13 @@ public class UserService implements UserDetailsService {
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             User userDetails = (User) authentication.getPrincipal();
             return userDetails.getId();
+        }
+        return null;
+    }
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            return (User) authentication.getPrincipal();
         }
         return null;
     }

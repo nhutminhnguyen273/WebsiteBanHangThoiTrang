@@ -18,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final UserService userService;
+
     private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
     @Bean
@@ -42,7 +43,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(@NotNull HttpSecurity http) throws Exception{
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**", "/js/**", "/fonts/**", "/sass/**", "/image/**", "/img/**", "/home/**", "/cart/**", "/forgot-password", "/reset-password", "/product/**", "/", "/oauth/**", "/register", "/login", "/products", "/cart/**")
+                        .requestMatchers("/css/**", "/js/**", "/fonts/**", "/sass/**", "/image/**", "/img/**", "/home/**", "/cart/**", "/forgot-password", "/reset-password", "/product/**", "/feedback/**", "/", "/oauth/**", "/register", "/login", "/products", "/cart/**")
                         .permitAll()
                         .requestMatchers("/products/edit/**", "/products/add", "/products/delete")
                         .hasAnyAuthority("ADMIN")

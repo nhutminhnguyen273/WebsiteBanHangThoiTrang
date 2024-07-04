@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout-admin">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Feedbacks</title>
+    <link th:href="@{/admin/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/admin/css/sb-admin-2.min.css}" rel="stylesheet">
+</head>
+
+<body>
+<div layout:fragment="content">
+    <h1 style="text-align: center;">Feedbacks</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Mã</th>
+            <th>Tên khách</th>
+            <th>Sđt</th>
+            <th>Email</th>
+            <th>Nhận xét</th>
+            <th>Ngày nhận</th>
+            <th>Chức năng</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="feedback : ${feedbacks}">
+            <td th:text="${feedback.id}"></td>
+            <td th:text="${feedback.name}"></td>
+            <td th:text="${feedback.phone}"></td>
+            <td th:text="${feedback.email}"></td>
+            <td th:text="${feedback.comment}"></td>
+            <td th:text="${feedback.dateReceived}"></td>
+            <td><a th:href="@{/admin/delete/{id}(id=${feedback.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Xóa</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

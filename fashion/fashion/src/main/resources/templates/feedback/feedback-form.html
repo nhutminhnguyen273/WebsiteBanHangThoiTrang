@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Feedback Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<body>
+<div class="container-fluid" style="margin-left:10px">
+    <section layout:fragment="content" class="container mb-5">
+        <h2 style="text-align: center;">Hãy gửi feedback của bạn cho chúng tôi 🥰</h2>
+        <form th:action="@{/feedback}" th:object="${feedback}" method="post" enctype="multipart/form-data">
+            <div class="input-box">
+                <!--        <span class="details">Họ và tên</span>-->
+                <label for="name">Họ và tên:</label>
+                <input type="text" id="name" name="name" class="form-control" th:field="*{name}" placeholder="Nhập họ và tên của bạn" required>
+                <div class="error-message" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            </div>
+            <div>
+                <label for="phone">Số điện thoại:</label>
+                <!--        <input type="text" id="phone" th:field="*{phone}" />-->
+                <input type="text" id="phone" name="phone" class="form-control" th:field="*{phone}" placeholder="Nhập sđt của bạn" required>
+                <div class="error-message" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                <!--        <input type="email" id="email" th:field="*{email}" />-->
+                <input type="text" id="email" name="email" class="form-control" th:field="*{email}" placeholder="Nhập email của bạn" required>
+                <div class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+            </div>
+            <div>
+                <label for="comment">Nội dung đánh giá:</label>
+                <!--        <textarea id="comment" th:field="*{comment}"></textarea>-->
+                <textarea id="comment" name="comment" class="form-control" th:field="*{comment}" placeholder="Nhập đánh giá" required> </textarea>
+                <div class="error-message" th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></div>
+            </div>
+            <button type="submit" class="btn btn-primary">Gửi</button>
+        </form>
+    </section>
+</div>
+
+</body>
+</html>

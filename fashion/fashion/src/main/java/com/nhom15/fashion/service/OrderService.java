@@ -4,6 +4,7 @@ import com.nhom15.fashion.models.*;
 import com.nhom15.fashion.repositories.InvoiceRepository;
 import com.nhom15.fashion.repositories.OrderDetailRepository;
 import com.nhom15.fashion.repositories.OrderRepository;
+import com.nhom15.fashion.repositories.VoucherRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +34,11 @@ public class OrderService {
     private UserService userService;
     @Autowired
     private InvoiceRepository invoiceRepository;
+    @Autowired
+    private VoucherRepository voucherRepository;
 
     @Transactional
-    public String createdOrder(String customerName, String address, String email, String phone, String note, List<CartItem> cartItems, Long userId){
+    public String createdOrder(String customerName, String address, String email, String phone, String note, List<CartItem> cartItems, Long userId, String voucherCode) {
         Order order = new Order();
         order.setCustomerName(customerName);
         order.setAddress(address);
@@ -44,6 +47,7 @@ public class OrderService {
         order.setNote(note);
         order.setStatus(false);
         order.setCreatedDate(LocalDate.now());
+
         order = orderRepository.save(order);
 
         for (CartItem item : cartItems) {
@@ -52,12 +56,22 @@ public class OrderService {
             details.setProduct(item.getProduct());
             details.setQuantity(item.getQuantity());
             details.setSize(item.getSize());
+            if (voucherCode != null && !voucherCode.isEmpty()) {
+                Optional<Voucher> voucherOpt = voucherRepository.findByCode(voucherCode);
+                Voucher voucher = voucherOpt.orElseThrow(() -> new RuntimeException("Mã giảm giá không hợp lệ hoặc đã hết hạn"));
+                if (voucher.getEndDate().isAfter(LocalDate.now())) {
+                    order.setVoucher(voucher);
+                    double discountAmount = calculateDiscount(cartItems, voucher.getDiscount());
+                    double totalCost = calculateTotalPrice(cartItems) - discountAmount;
+                    order.setTotalPrice(totalCost);
+                } else {
+                    throw new RuntimeException("Mã giảm giá không hợp lệ hoặc đã hết hạn");
+                }
+            } else {
+                order.setTotalPrice(calculateTotalPrice(cartItems));
+            }
             orderDetailRepository.save(details);
         }
-
-        double totalCost = calculateTotalPrice(cartItems);
-        order.setTotalPrice(totalCost);
-        orderRepository.save(order);
 
         cartService.clearCart(userId);
         return order.getId();
@@ -72,7 +86,10 @@ public class OrderService {
         }
         return totalCost;
     }
-
+    private double calculateDiscount(List<CartItem> cartItems, int discountPercentage) {
+        double totalCost = calculateTotalPrice(cartItems);
+        return ((discountPercentage / 100.0) * totalCost);
+    }
     @Transactional
     public BigDecimal calculateTotalPrice(String orderId) {
         Optional<Order> orderOpt = orderRepository.findById(orderId);

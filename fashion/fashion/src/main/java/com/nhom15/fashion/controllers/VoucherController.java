@@ -1,21 +1,24 @@
 package com.nhom15.fashion.controllers;
 
 import com.nhom15.fashion.models.Product;
+import com.nhom15.fashion.models.User;
 import com.nhom15.fashion.models.Voucher;
+import com.nhom15.fashion.service.CartService;
 import com.nhom15.fashion.service.CategoryService;
 import com.nhom15.fashion.service.ProductService;
 import com.nhom15.fashion.service.VoucherService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/vouchers")
@@ -24,6 +27,8 @@ public class VoucherController {
     private VoucherService voucherService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private CartService cartService;
 
     @GetMapping
     public String voucherList(Model model) {
@@ -73,5 +78,39 @@ public class VoucherController {
     public String deleteVoucher(@PathVariable String id){
         voucherService.deleteById(id);
         return "redirect:/vouchers";
+    }
+    @PostMapping("/apply-discount")
+    public String applyDiscount(@RequestParam("voucherCode") String voucherCode, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/login";
+        }
+
+        Long userId = null;
+        if (authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            userId = user.getId();
+        } else if (authentication.getPrincipal() instanceof OAuth2User) {
+        }
+
+        if (userId == null) {
+            return "redirect:/login";
+        }
+        Optional<Voucher> voucherOptional = voucherService.getVoucherByCode(voucherCode);
+
+        if (voucherOptional.isPresent()) {
+            Voucher voucher = voucherOptional.get();
+            double discountPercentage = voucher.getDiscount();
+            cartService.applyDiscountToCartItems(userId, discountPercentage);
+            model.addAttribute("discountedAmount", true);
+            model.addAttribute("discountPercentage", discountPercentage);
+        } else {
+            model.addAttribute("discountError", "Mã giảm giá không hợp lệ hoặc đã hết hạn.");
+        }
+
+        model.addAttribute("cartItems", cartService.getCartItems(userId));
+        model.addAttribute("totalAmount", cartService.getTotalAmount(userId));
+        return "redirect:/cart";
     }
 }

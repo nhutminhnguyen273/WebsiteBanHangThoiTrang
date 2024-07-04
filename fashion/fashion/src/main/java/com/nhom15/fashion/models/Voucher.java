@@ -31,11 +31,8 @@ public class Voucher {
 
     private LocalDate endDate;
 
-    private float discount;
+    private int discount;
 
     private int quantity;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    public Category category;
 }

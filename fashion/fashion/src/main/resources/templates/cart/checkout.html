@@ -31,18 +31,28 @@
             <input type="text" id="note" name="note" class="form-control">
         </div>
         <div class="mb-3">
+            <label for="voucherCode" class="form-label">Mã khuyến mãi:</label>
+            <input type="text" id="voucherCode" name="voucherCode" class="form-control">
+        </div>
+        <div class="mb-3">
             <label class="form-label">Phương thức thanh toán:</label><br>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" id="vnp" name="paymentMethod" value="vnp" required>
-                <label class="form-check-label" for="vnp">VNP</label>
+                <label class="form-check-label" for="vnp">
+                    <img th:src="@{/img/icon/vnpay.jpg}" alt="VNPAY" style="height: 20px; margin-right: 5px;"> VNPAY
+                </label>
             </div>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" id="paypal" name="paymentMethod" value="paypal">
-                <label class="form-check-label" for="paypal">PayPal</label>
+                <label class="form-check-label" for="paypal">
+                    <img th:src="@{/img/icon/paypal.jpg}" alt="PayPal" style="height: 20px; margin-right: 5px;"> PayPal
+                </label>
             </div>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" id="momo" name="paymentMethod" value="momo">
-                <label class="form-check-label" for="momo">MoMo</label>
+                <label class="form-check-label" for="momo">
+                    <img th:src="@{/img/icon/momo.jpg}" alt="MoMo" style="height: 20px; margin-right: 5px;"> MoMo
+                </label>
             </div>
         </div>
         <button type="submit" class="primary-btn">Đặt hàng</button>

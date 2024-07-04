@@ -73,11 +73,13 @@
                 <div class="col-lg-6 col-md-5">
                     <div class="header__top__right">
                         <div class="header__top__links">
-                            <a sec:authorize="isAuthenticated()" href="#" onclick="document.getElementById('logoutForm').submit()" class="btn btn-outline-light">Đăng xuất</a>
+                            <a sec:authorize="isAuthenticated()" href="#" onclick="document.getElementById('logoutForm').submit()" th:text="#{word7}" class="btn btn-outline-light">Đăng xuất</a>
                             <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
                                 <!-- Hidden logout form -->
                             </form>
-                            <a sec:authorize="!isAuthenticated()" class="btn btn-outline-light" th:href="@{/login}">Đăng nhập</a>
+                            <a sec:authorize="!isAuthenticated()" class="btn btn-outline-light" th:text="#{word8}" th:href="@{/login}">Đăng nhập</a>
+                            <a th:href="@{/home?lang=vi}" class="btn red">VI</a>
+                            <a th:href="@{/home?lang=en}" class="btn yellow">EN</a>
                             <a href="#">FAQs</a>
                         </div>
                     </div>
@@ -95,23 +97,23 @@
             <div class="col-lg-6 col-md-6">
                 <nav class="header__menu mobile-menu">
                     <ul>
-                        <li class="active"><a th:href="@{/home}">Home</a></li>
+                        <li class="active"><a th:href="@{/home}" th:text="#{word1}">Home</a></li>
                         <li>
-                            <a th:href="@{product/shop}">Sản phẩm</a>
+                            <a th:href="@{product/shop}" th:text="#{word2}">Sản phẩm</a>
                             <ul class="dropdown">
                                 <li th:each="category : ${categories}">
                                     <a th:href="@{/product/{name}(name=${category.name})}" th:text="${category.name}"></a>
                                 </li>
                             </ul>
                         </li>
-                        <li><a href="#">Các trang</a>
+                        <li><a href="#" th:text="#{word3}">Các trang</a>
                             <ul class="dropdown">
-                                <li><a th:href="@{/cart}">Giỏ hàng</a></li>
-                                <li><a th:href="@{/history}">Lịch sử mua hàng</a></li>
+                                <li><a th:href="@{/cart}" th:text="#{word14}">Giỏ hàng</a></li>
+                                <li><a th:href="@{/history}" th:text="#{word15}">Lịch sử mua hàng</a></li>
                             </ul>
                         </li>
-                        <li><a th:href="@{/blog}">Bài viết</a></li>
-                        <li><a href="./contact.html">Liên hệ</a></li>
+                        <li><a th:href="@{/blog}" th:text="#{word4}">Bài viết</a></li>
+                        <li><a th:href="@{/feedback}" th:text="#{word5}">Liên hệ</a></li>
                     </ul>
                 </nav>
             </div>
@@ -119,8 +121,6 @@
                 <div class="header__nav__option">
                     <a href="#" class="search-switch"><img th:src="@{/img/icon/search.png}" alt=""></a>
                     <a href="#"><img th:src="@{/img/icon/heart.png}" alt=""></a>
-                    <a href="#"><img th:src="@{/img/icon/cart.png}" alt=""> <span>0</span></a>
-                    <div class="price">$0.00</div>
                 </div>
             </div>
         </div>

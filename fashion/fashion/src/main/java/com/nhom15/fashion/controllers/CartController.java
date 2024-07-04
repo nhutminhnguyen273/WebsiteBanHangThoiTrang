@@ -3,11 +3,14 @@ package com.nhom15.fashion.controllers;
 import com.nhom15.fashion.models.CartItem;
 import com.nhom15.fashion.models.Category;
 import com.nhom15.fashion.models.User;
+import com.nhom15.fashion.models.Voucher;
 import com.nhom15.fashion.service.CartService;
 import com.nhom15.fashion.service.CategoryService;
+import com.nhom15.fashion.service.VoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +20,7 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/cart")
@@ -25,6 +29,8 @@ public class CartController {
     private CartService cartService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private VoucherService voucherService;
 
     @GetMapping
     public String showCart(Model model) {
@@ -50,6 +56,7 @@ public class CartController {
         long totalCost = cartItems.stream()
                 .mapToLong(item -> item.getProduct().getPrice() * item.getQuantity())
                 .sum();
+
         String formattedTotalCost = decimalFormat.format(totalCost);
 
         List<Category> categoriesList = categoryService.getAll();
@@ -106,17 +113,14 @@ public class CartController {
     public String updateCart(@RequestParam("quantities") int[] quantities,
                              @RequestParam("productIds") Long[] productIds,
                              RedirectAttributes redirectAttributes) {
-        // Validate input
         if (quantities == null || productIds == null || quantities.length != productIds.length) {
             throw new IllegalArgumentException("Invalid quantities or productIds");
         }
 
-        // Create map of productIds to quantities
         Map<Long, Integer> productQuantities = new HashMap<>();
         for (int i = 0; i < productIds.length; i++) {
             productQuantities.put(productIds[i], quantities[i]);
         }
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/login";

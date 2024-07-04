@@ -40,12 +40,18 @@ public class VoucherService {
             throw new IllegalStateException("Không tìm thấy mã khuyến mãi");
         voucherRepository.deleteById(id);
     }
-    public Optional<Voucher> findByCode(String code) {
+
+    public Optional<Voucher> getVoucherByCode(String code) {
         return voucherRepository.findByCode(code);
     }
 
     public void updateQuantity(Voucher voucher, int quantity) {
         voucher.setQuantity(quantity);
         voucherRepository.save(voucher);
+    }
+
+    public boolean isValid(Voucher voucher) {
+        LocalDate now = LocalDate.now();
+        return voucher.getStartDate().isBefore(now) && voucher.getEndDate().isAfter(now);
     }
 }

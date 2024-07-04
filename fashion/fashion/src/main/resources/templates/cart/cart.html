@@ -61,7 +61,7 @@
                                 <td th:text="${item.product.name}"></td>
                                 <td class="quantity__item">
                                     <div class="quantity">
-                                        <input type="number" name="quantities" min="1" th:value="${item.quantity}"
+                                        <input type="number" name="quantities" min="1" max="10" th:value="${item.quantity}"
                                                data-product-id="${item.product.id}">
                                         <input type="hidden" name="productIds" th:value="${item.product.id}">
                                     </div>
@@ -79,7 +79,7 @@
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="continue__btn">
-                                    <a th:href="@{product/shop}">Tiếp tục mua sắm</a>
+                                    <a th:href="@{/product/shop}">Tiếp tục mua sắm</a>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6">
@@ -95,15 +95,17 @@
                 <div class="col-lg-4">
                     <div class="cart__discount">
                         <h6>Mã khuyến mãi</h6>
-                        <form action="#">
-                            <input type="text" placeholder="Khuyến mãi">
+                        <form th:action="@{/vouchers//apply-discount}" method="post">
+                            <input type="text" id="voucherCode" name="voucherCode" th:value="${voucherCode}" placeholder="Khuyến mãi">
                             <button type="submit">Áp dụng</button>
                         </form>
+                        <p th:if="${successMessage}" th:text="${successMessage}"></p>
+                        <p th:if="${errorMessage}" th:text="${errorMessage}"></p>
                     </div>
                     <div class="cart__total">
                         <h6>Tổng giỏ hàng</h6>
                         <ul>
-                            <li>Tổng <span th:text="${totalCost}"></span></li>
+                            <li>Tổng <span th:text="${discountedAmount != null ? discountedAmount : totalCost}"></span></li>
                         </ul>
                         <div>
                             <a th:href="@{/cart/clear}" class="primary-btn" style="margin-bottom:5px">Xóa giỏ hàng</a>

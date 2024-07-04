@@ -31,6 +31,10 @@ public class CartItem {
     private String formattedPrice;
 
     @ManyToOne
+    @JoinColumn(name = "voucher_id")
+    private Voucher voucher;
+
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -39,6 +43,18 @@ public class CartItem {
         this.quantity = quantity;
         this.size = size;
         this.user = user;
+        this.totalPrice = product.getPrice() * quantity;
+    }
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+        updateTotalPrice();
+    }
+
+    public void applyDiscount(float discount) {
+        this.totalPrice = (long) (product.getPrice() * quantity * (1 - discount / 100));
+    }
+
+    private void updateTotalPrice() {
         this.totalPrice = product.getPrice() * quantity;
     }
 

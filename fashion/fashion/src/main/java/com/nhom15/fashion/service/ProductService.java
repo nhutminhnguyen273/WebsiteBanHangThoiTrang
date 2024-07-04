@@ -84,4 +84,7 @@ public class ProductService {
     public List<Product> searchProducts(String keyword) {
         return productRepository.findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(keyword);
     }
+    public Optional<Product> findProductById(Long id) {
+        return productRepository.findById(id);
+    }
 }

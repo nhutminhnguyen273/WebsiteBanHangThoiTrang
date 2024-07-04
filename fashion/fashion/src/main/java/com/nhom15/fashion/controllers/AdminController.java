@@ -1,8 +1,10 @@
 package com.nhom15.fashion.controllers;
 
 import com.google.gson.Gson;
+import com.nhom15.fashion.models.Feedback;
 import com.nhom15.fashion.models.User;
 import com.nhom15.fashion.models.Voucher;
+import com.nhom15.fashion.service.FeedbackService;
 import com.nhom15.fashion.service.InvoiceService;
 import com.nhom15.fashion.service.UserService;
 import com.nhom15.fashion.service.VoucherService;
@@ -31,6 +33,9 @@ public class AdminController {
 
     @Autowired
     private InvoiceService invoiceService;
+
+    @Autowired
+    private FeedbackService feedbackService;
 
     @GetMapping
     public String adminHome(){
@@ -71,5 +76,13 @@ public class AdminController {
         String json = new Gson().toJson(revenueStatistics);
         model.addAttribute("revenueStatistics", json);
         return "statistics/revenue";
+    }
+
+    @GetMapping("/feedbacks")
+    public String getAdminFeedbacks(Model model) {
+        // Assuming you have a service to get feedbacks
+        List<Feedback> feedbacks = feedbackService.getAllFeedbacks();
+        model.addAttribute("feedbacks", feedbacks);
+        return "feedback/admin-feedbacks";
     }
 }

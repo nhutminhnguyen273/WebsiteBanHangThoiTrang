@@ -1,9 +1,6 @@
 package com.nhom15.fashion.service;
 
-import com.nhom15.fashion.models.CartItem;
-import com.nhom15.fashion.models.Product;
-import com.nhom15.fashion.models.User;
-import com.nhom15.fashion.models.Voucher;
+import com.nhom15.fashion.models.*;
 import com.nhom15.fashion.repositories.CartRepository;
 import com.nhom15.fashion.repositories.IUserRepository;
 import com.nhom15.fashion.repositories.ProductRepository;
@@ -36,6 +33,9 @@ public class CartService {
 
     @Autowired
     private VoucherRepository voucherRepository;
+
+    @Autowired
+    private VoucherService voucherService;
 
     public List<CartItem> getCartItems(Long userId) {
         return cartRepository.findByUser_Id(userId);
@@ -106,5 +106,20 @@ public class CartService {
 
     public double calculateTotalCost(List<CartItem> cartItems) {
         return cartItems.stream().mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity()).sum();
+    }
+    @Transactional(readOnly = true)
+    public double getTotalAmount(Long userId) {
+        List<CartItem> cartItems = cartRepository.findByUser_Id(userId);
+        return calculateTotalCost(cartItems);
+    }
+    @Transactional
+    public void applyDiscountToCartItems(Long userId, double discountPercentage) {
+        List<CartItem> cartItems = cartRepository.findByUser_Id(userId);
+        for (CartItem cartItem : cartItems) {
+            long totalPrice = cartItem.getProduct().getPrice() * cartItem.getQuantity();
+            long discountedAmount = (long) (totalPrice - (totalPrice * discountPercentage / 100));
+            cartItem.setTotalPrice(discountedAmount);
+            cartRepository.save(cartItem);
+        }
     }
 }

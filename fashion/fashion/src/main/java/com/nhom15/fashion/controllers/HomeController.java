@@ -46,7 +46,6 @@ public class HomeController {
         // Add the filtered categories and products to the model
         model.addAttribute("categories", filteredCategories);
         model.addAttribute("categoryProductsMap", categoryProductsMap);
-
         return "home/home";
     }
 }
