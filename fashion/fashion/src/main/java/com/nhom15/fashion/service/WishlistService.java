@@ -37,13 +37,11 @@ public class WishlistService {
         Optional<WishlistItem> existingItem = wishlistItemRepository.findByProduct_IdAndUser_Id(userId, productId);
 
         if (existingItem.isPresent()) {
-            return; // Sản phẩm đã tồn tại trong danh sách yêu thích
+            return;
         }
-
         WishlistItem wishlistItem = new WishlistItem();
         wishlistItem.setUser(user);
         wishlistItem.setProduct(product);
-
         wishlistItemRepository.save(wishlistItem);
     }
 

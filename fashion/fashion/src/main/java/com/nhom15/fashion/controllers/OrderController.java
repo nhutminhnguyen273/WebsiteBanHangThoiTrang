@@ -1,9 +1,6 @@
 package com.nhom15.fashion.controllers;
 
-import com.nhom15.fashion.models.CartItem;
-import com.nhom15.fashion.models.Category;
-import com.nhom15.fashion.models.OrderDetails;
-import com.nhom15.fashion.models.User;
+import com.nhom15.fashion.models.*;
 import com.nhom15.fashion.service.CartService;
 import com.nhom15.fashion.service.CategoryService;
 import com.nhom15.fashion.service.OrderService;
@@ -145,7 +142,15 @@ public class OrderController {
             List<OrderDetails> orderDetailsList = orderService.getOrderDetailsByOrderId(orderId);
 
             int totalQuantity = orderDetailsList.stream().mapToInt(OrderDetails::getQuantity).sum();
-            long totalAmount = orderDetailsList.stream().mapToLong(orderDetails -> orderDetails.getProduct().getPrice() * orderDetails.getQuantity()).sum();
+            long totalAmount = orderDetailsList.stream().mapToLong(orderDetails -> {
+                long price = orderDetails.getProduct().getPrice();
+                Voucher voucher = orderDetails.getOrder().getVoucher();
+                if (voucher != null) {
+                    long discount = price * voucher.getDiscount() / 100;
+                    price -= discount;
+                }
+                return price * orderDetails.getQuantity();
+            }).sum();
 
             orderService.saveInvoice(orderId, totalQuantity, totalAmount);
 

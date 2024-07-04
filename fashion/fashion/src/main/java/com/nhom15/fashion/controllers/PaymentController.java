@@ -37,8 +37,6 @@ public class PaymentController {
         BigDecimal totalPrice = orderService.calculateTotalPrice(orderId);
         long amount = totalPrice.multiply(new BigDecimal(100)).longValue();
 
-            //long amount = 10000000;
-
         String vnp_TxnRef = Config.getRandomNumber(8);
         String vnp_IpAddr = "127.0.0.1";
 

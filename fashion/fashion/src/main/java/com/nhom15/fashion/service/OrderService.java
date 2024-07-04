@@ -58,6 +58,7 @@ public class OrderService {
             details.setSize(item.getSize());
             double totalCost = calculateTotalPrice(cartItems);
             order.setTotalPrice(totalCost);
+            order.setVoucher(item.getVoucher());
             orderDetailRepository.save(details);
         }
 
@@ -78,7 +79,7 @@ public class OrderService {
     public BigDecimal calculateTotalPrice(String orderId) {
         Optional<Order> orderOpt = orderRepository.findById(orderId);
         if (orderOpt.isEmpty()) {
-            throw new EntityNotFoundException("Không tìm thấy sản phẩm.");
+            throw new EntityNotFoundException("Không tìm thấy đơn hàng.");
         }
         Order order = orderOpt.get();
 
@@ -91,6 +92,14 @@ public class OrderService {
                 totalPrice = totalPrice.add(price.multiply(BigDecimal.valueOf(details.getQuantity())));
             }
         }
+
+        Voucher voucher = order.getVoucher();
+        if (voucher != null) {
+            BigDecimal discount = BigDecimal.valueOf(voucher.getDiscount());
+            BigDecimal discountAmount = totalPrice.multiply(discount).divide(BigDecimal.valueOf(100));
+            totalPrice = totalPrice.subtract(discountAmount);
+        }
+
         return totalPrice;
     }
     @Transactional

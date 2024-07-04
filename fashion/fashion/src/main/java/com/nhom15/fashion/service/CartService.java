@@ -24,13 +24,10 @@ import java.util.*;
 public class CartService {
     @Autowired
     private CartRepository cartRepository;
-
     @Autowired
     private ProductRepository productRepository;
-
     @Autowired
     private IUserRepository userRepository;
-
     @Autowired
     private VoucherRepository voucherRepository;
 

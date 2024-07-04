@@ -41,7 +41,9 @@
                 <textarea id="comment" name="comment" class="form-control" th:field="*{comment}" placeholder="Nhập đánh giá" required> </textarea>
                 <div class="error-message" th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></div>
             </div>
-            <button type="submit" class="btn btn-primary">Gửi</button>
+            <div class="md-3" style="margin-top:20px">
+                <button type="submit" class="primary-btn">Gửi</button>
+            </div>
         </form>
     </section>
 </div>
