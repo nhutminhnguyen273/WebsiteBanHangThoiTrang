@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout-admin">
+<head>
+    <meta charset="UTF-8">
+    <title>Cập nhật voucher</title>
+</head>
+<body>
+<div class="container-fluid" style="margin-left:10px">
+    <h1>Cập nhật voucher</h1>
+    <section layout:fragment="content" class="container mb-5">
+        <form th:action="@{/vouchers/update/{id}(id=${voucher.id})}" method="post" th:object="${voucher}" enctype="multipart/form-data" class="needs-validation" novalidate>
+            <div class="mb-3">
+                <label for="name">Tên voucher</label>
+                <input type="text" id="name" name="name" class="form-control" th:field="*{name}" placeholder="Tên voucher">
+                <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            </div>
+            <div class="mb-3">
+                <label for="code">Mã code</label>
+                <input type="text" id="code" name="code" class="form-control" th:field="*{code}" placeholder="Mã code">
+                <div class="text-danger" th:if="${#fields.hasErrors('code')}" th:errors="*{code}"></div>
+            </div>
+            <div class="mb-3">
+                <label for="createdDate">Ngày tạo</label>
+                <input type="date" id="createdDate" name="createdDate" class="form-control" th:field="*{createdDate}">
+                <div class="text-danger" th:if="${#fields.hasErrors('createdDate')}" th:errors="*{createdDate}"></div>
+            </div>
+            <div class="mb-3">
+                <label for="startDate">Ngày áp dụng</label>
+                <input type="date" id="startDate" name="startDate" class="form-control" th:field="*{startDate}">
+                <div class="text-danger" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}"></div>
+            </div>
+            <div class="mb-3">
+                <label for="endDate">Ngày hết hạn</label>
+                <input type="date" id="endDate" name="endDate" class="form-control" th:field="*{endDate}">
+                <div class="text-danger" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}"></div>
+            </div>
+            <div class="mb-3">
+                <label for="discount">Khuyến mãi (%)</label>
+                <input type="number" id="discount" name="discount" class="form-control" th:field="*{discount}" placeholder="Khuyến mãi">
+                <div class="text-danger" th:if="${#fields.hasErrors('discount')}" th:errors="*{discount}"></div>
+            </div>
+            <div class="mb-3">
+                <label for="quantity">Số lượng</label>
+                <input type="number" id="quantity" name="quantity" class="form-control" th:field="*{quantity}" placeholder="Số lượng">
+                <div class="text-danger" th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}"></div>
+            </div>
+            <button type="submit" class="btn btn-primary">Cập nhật</button>
+            <a type="button" th:href="@{/vouchers}" class="btn btn-info">Quay về</a>
+        </form>
+    </section>
+</div>
+</body>
+</html>

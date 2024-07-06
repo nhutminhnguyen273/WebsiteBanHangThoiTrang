@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Wishlist</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div layout:fragment="content" class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <ul class="list-group">
+                <li th:each="item : ${wishlistItems}" class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <img th:src="@{/image/{avatar}(avatar=${item.product.avatar})}" class="img-fluid" alt="Product Image">
+                        </div>
+                        <div class="col-md-6">
+                            <h5 th:text="${item.product.name}">Tên sản phẩm</h5>
+                            <p th:text="${item.product.description}">Mô tả</p>
+                            <p th:text="'Price: ' + ${item.product.price} + ' VND'">Giá</p>
+                        </div>
+                        <div class="col-md-4">
+                            <form th:action="@{/wishlist/remove/{id}(id=${item.id})}" method="post">
+                                <input type="hidden" name="_method" value="delete"/>
+                                <button type="submit" class="btn btn-danger">Xóa</button>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

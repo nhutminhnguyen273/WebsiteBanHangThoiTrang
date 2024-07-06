@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout-admin">
+<head>
+    <meta charset="UTF-8">
+    <title>User</title>
+</head>
+<body>
+<div class="container-fluid">
+    <section layout:fragment="content">
+        <div style="margin-left:10px; margin-bottom:5px">
+            <a th:href="@{/admin/add-employer}" type="button" class="btn btn-primary">Thêm nhân viên</a>
+        </div>
+        <div style="margin-left:10px; margin-bottom:5px">
+            <div style="margin-left:10px">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Username</th>
+                        <th>Họ và tên</th>
+                        <th>Ngày sinh</th>
+                        <th>Giới tính</th>
+                        <th>Email</th>
+                        <th>Số điện thoại</th>
+                        <th>Chức năng</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="employer : ${employerList}">
+                        <td th:text="${employer.id}"></td>
+                        <td th:text="${employer.username}"></td>
+                        <td th:text="${employer.fullName}"></td>
+                        <td th:text="${employer.dateOfBirth}"></td>
+                        <td th:text="${employer.gender == true} ? 'Nam' : 'Nữ'"></td>
+                        <td th:text="${employer.email}"></td>
+                        <td th:text="${employer.phone}">
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>

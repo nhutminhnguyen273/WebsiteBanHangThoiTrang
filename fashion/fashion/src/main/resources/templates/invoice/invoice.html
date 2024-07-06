@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Lịch Sử Mua Hàng</title>
+    <link th:href="@{/admin/css/sb-admin-2.min.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <style>
+        .table {
+            margin: 0 auto;
+            width: 90%;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content" class="container-fluid">
+    <h1 class="text-center my-4">Lịch Sử Mua Hàng</h1>
+    <table class="table table-bordered table-hover table-sm">
+        <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Ngày Tạo</th>
+            <th>Số Lượng</th>
+            <th>Tổng Số Tiền</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="invoice : ${invoices}">
+            <td th:text="${invoice.id}"></td>
+            <td th:text="${invoice.createdDate}"></td>
+            <td th:text="${invoice.quantity}"></td>
+            <td th:text="${invoice.totalAmount}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
